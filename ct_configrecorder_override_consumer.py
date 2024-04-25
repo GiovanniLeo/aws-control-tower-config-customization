@@ -31,7 +31,7 @@ def lambda_handler(event, context):
     logging.getLogger().setLevel(LOG_LEVEL)
 
     try:
-
+        disabled_accounts = os.getenv('DISABLED_ACCOUNTS')
         logging.info('Event Body:')
 
         body = json.loads(event['Records'][0]['body'])
@@ -87,8 +87,8 @@ def lambda_handler(event, context):
         try:
             role_arn = 'arn:aws:iam::' + account_id + ':role/aws-controltower-ConfigRecorderRole'
 
-            CONFIG_RECORDER_EXCLUSION_RESOURCE_STRING = os.getenv('CONFIG_RECORDER_EXCLUDED_RESOURCE_LIST')
-            CONFIG_RECORDER_EXCLUSION_RESOURCE_LIST = CONFIG_RECORDER_EXCLUSION_RESOURCE_STRING.split(',')
+            config_record_custom_resource = os.getenv('CONFIG_RECORDER_RESOURCE_LIST')
+            config_record_custom_resource_list = config_record_custom_resource.split(',')
 
             # Event = Delete is when stack is deleted, we rollback changed made and leave it as ControlTower Intended
             if event == 'Delete':
@@ -102,24 +102,26 @@ def lambda_handler(event, context):
                         }
                     })
                 logging.info(f'Response for put_configuration_recorder :{response} ')
-
             else:
-                response = configservice.put_configuration_recorder(
-                    ConfigurationRecorder={
-                        'name': 'aws-controltower-BaselineConfigRecorder',
-                        'roleARN': role_arn,
-                        'recordingGroup': {
-                            'allSupported': False,
-                            'includeGlobalResourceTypes': False,
-                            'exclusionByResourceTypes': {
-                                'resourceTypes': CONFIG_RECORDER_EXCLUSION_RESOURCE_LIST
-                            },
-                            'recordingStrategy': {
-                                'useOnly': 'EXCLUSION_BY_RESOURCE_TYPES'
+                if account_id in disabled_accounts:
+                    logging.info(f'Deleting recordings for :{account_id}')
+                    response = configservice.delete_configuration_recorder(
+                        ConfigurationRecorder={
+                            'name': 'aws-controltower-BaselineConfigRecorder',
+                        })
+                    logging.info(f'Response for delete_configuration_recorder :{response} ')
+                else:
+                    response = configservice.put_configuration_recorder(
+                        ConfigurationRecorder={
+                            'name': 'aws-controltower-BaselineConfigRecorder',
+                            'roleARN': role_arn,
+                            'recordingGroup': {
+                                'allSupported': False,
+                                'includeGlobalResourceTypes': False,
+                                'resourceTypes': config_record_custom_resource_list
                             }
-                        }
-                    })
-                logging.info(f'Response for put_configuration_recorder :{response} ')
+                        })
+                    logging.info(f'Response for put_configuration_recorder :{response} ')
 
             # lets describe for configuration recorder after the update
             configrecorder = configservice.describe_configuration_recorders()

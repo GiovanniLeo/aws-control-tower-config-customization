@@ -2,14 +2,21 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: 'AWS CloudFormation Template to update config recorder settings in child accounts created by ControlTower.'
 Parameters:
 
-  ExcludedAccounts:
-    Description: Excluded Accounts list. This list should contain Management account, Log Archive and Audit accounts at the minimum
+  DisabledAccounts:
+    Description: Disabled Accounts list.
     Default: "['111111111111', '222222222222', '333333333333']"
     MaxLength: '2000'
     MinLength: '36'
     Type: String
 
-  ConfigRecorderExcludedResourceTypes:
+  EnabledAccounts:
+    Description: Enabled Accounts list. This list should contain Management account, Log Archive and Audit accounts at the minimum
+    Default: "['111111111111', '222222222222', '333333333333']"
+    MaxLength: '2000'
+    MinLength: '36'
+    Type: String
+
+  ConfigRecorderResourceTypes:
     Description: List of all resource types to be excluded from Config Recorder
     Default: "AWS::HealthLake::FHIRDatastore,AWS::Pinpoint::Segment,AWS::Pinpoint::ApplicationSettings"
     Type: String
@@ -46,7 +53,8 @@ Resources:
             ReservedConcurrentExecutions: 1
             Environment:
                 Variables:
-                    EXCLUDED_ACCOUNTS: !Ref ExcludedAccounts
+                    DISABLED_ACCOUNTS: "DisabledAccounts"
+                    ENABLED_ACCOUNTS: "EnabledAccounts"
                     LOG_LEVEL: INFO
                     SQS_URL: !Ref SQSConfigRecorder
 
@@ -79,7 +87,8 @@ Resources:
             Environment:
                 Variables:
                     LOG_LEVEL: INFO
-                    CONFIG_RECORDER_EXCLUDED_RESOURCE_LIST: !Ref ConfigRecorderExcludedResourceTypes
+                    DISABLED_ACCOUNTS: "DisabledAccounts"
+                    CONFIG_RECORDER_RESOURCE_LIST: !Ref ConfigRecorderResourceTypes
 
     ConsumerLambdaEventSourceMapping:
         Type: AWS::Lambda::EventSourceMapping
