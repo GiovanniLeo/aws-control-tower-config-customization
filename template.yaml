@@ -51,8 +51,8 @@ Resources:
             ReservedConcurrentExecutions: 1
             Environment:
                 Variables:
-                    DISABLED_ACCOUNTS: "DisabledAccounts"
-                    ENABLED_ACCOUNTS: "EnabledAccounts"
+                    DISABLED_ACCOUNTS: !Ref DisabledAccounts
+                    ENABLED_ACCOUNTS: !Ref EnabledAccounts
                     LOG_LEVEL: INFO
                     SQS_URL: !Ref SQSConfigRecorder
 
@@ -85,7 +85,7 @@ Resources:
             Environment:
                 Variables:
                     LOG_LEVEL: INFO
-                    DISABLED_ACCOUNTS: "DisabledAccounts"
+                    DISABLED_ACCOUNTS: !Ref DisabledAccounts
                     CONFIG_RECORDER_RESOURCE_LIST: !Ref ConfigRecorderResourceTypes
 
     ConsumerLambdaEventSourceMapping:
