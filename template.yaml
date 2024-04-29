@@ -6,14 +6,12 @@ Parameters:
     Description: Disabled Accounts list.
     Default: "['523753954008']"
     MaxLength: '2000'
-    MinLength: '36'
     Type: String
 
   EnabledAccounts:
     Description: Enabled Accounts list. This list should contain Management account, Log Archive and Audit accounts at the minimum
     Default: "[]"
     MaxLength: '2000'
-    MinLength: '36'
     Type: String
 
   ConfigRecorderResourceTypes:
