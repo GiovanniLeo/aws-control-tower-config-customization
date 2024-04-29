@@ -4,21 +4,21 @@ Parameters:
 
   DisabledAccounts:
     Description: Disabled Accounts list.
-    Default: "['111111111111', '222222222222', '333333333333']"
+    Default: "['523753954008']"
     MaxLength: '2000'
     MinLength: '36'
     Type: String
 
   EnabledAccounts:
     Description: Enabled Accounts list. This list should contain Management account, Log Archive and Audit accounts at the minimum
-    Default: "['111111111111', '222222222222', '333333333333']"
+    Default: "[]"
     MaxLength: '2000'
     MinLength: '36'
     Type: String
 
   ConfigRecorderResourceTypes:
     Description: List of all resource types to be excluded from Config Recorder
-    Default: "AWS::HealthLake::FHIRDatastore,AWS::Pinpoint::Segment,AWS::Pinpoint::ApplicationSettings"
+    Default: "AWS::ApiGateway::RestApi,AWS::ApiGateway::Stage,AWS::ApiGatewayV2::Api,AWS::ApiGatewayV2::Stage,AWS::Backup::BackupPlan,AWS::Backup::BackupSelection,AWS::Backup::BackupVault,AWS::Backup::RecoveryPointAWS::CloudFormation::Stack,AWS::CloudFront::Distribution.AlWS::CloudTrail::Trail,AWS::CloudWatch::Alarm,AWS::CodeBuildsProject,AWS::CodeDeploy::Application,AWS::CodeDeploy::DeploymentConfig,AWS::CodePipeline::Pipeline,AWS::Config::ResourceComolianceAWS::DynamoDB::TableAWS:EC2::EIP,AWS:EC2:InternetGateway,AWS::EC2::NetworkAcl,AWS::EC2::Networkinterface,AWS::EC2::RouteTable,AWS::EC2::VPCEndpoint,AWS::ElasticBeanstalk::Application,AWS:ElasticBeanstalk:ApplicationVersion,AWS:ElasticBeanstalk::Environment,AWS:IAM::Policy,AWS:IAM::Role,AWS:IAM::User,AWS:KMS::Key,AWS::Lambda::Function,AWS::RDS::DBSecurityGroup,AWS::RDS::DBSnapshot,AWS::RDS::DBSubnetGroup,AWS::Redshift::ClusterParameterGroup,AWS::S3::AccountPublicAccessBlock,AWS::S3::Bucket,AWS::SNS::Topic,AWS::SQS:Queue,AWS::SSM:ManagedInstancelnventory,AWS::WAFv2::WebACL"
     Type: String
 
   CloudFormationVersion:
@@ -211,7 +211,7 @@ Resources:
         #update this to match AWS public bucket
         #s3://marketplace-sa-resources/ct-blogs-content/ct_configrecorder_override_consumer_v2.zip
         #s3://marketplace-sa-resources/ct-blogs-content/ct_configrecorder_override_producer.zip
-        SourceBucket: marketplace-sa-resources
+        SourceBucket: control-tower-config-customization-lambdas
         Prefix: ct-blogs-content/
         Objects:
           - 'ct_configrecorder_override_producer.zip'
