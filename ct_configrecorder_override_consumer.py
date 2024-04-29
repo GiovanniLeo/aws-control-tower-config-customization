@@ -106,9 +106,7 @@ def lambda_handler(event, context):
                 if account_id in disabled_accounts:
                     logging.info(f'Deleting recordings for :{account_id}')
                     response = configservice.delete_configuration_recorder(
-                        ConfigurationRecorder={
-                            'name': 'aws-controltower-BaselineConfigRecorder',
-                        })
+                        ConfigurationRecorderName='aws-controltower-BaselineConfigRecorder' )
                     logging.info(f'Response for delete_configuration_recorder :{response} ')
                 else:
                     response = configservice.put_configuration_recorder(
