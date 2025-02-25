@@ -90,6 +90,7 @@ def lambda_handler(event, context):
             cfnresource.send(event, context, cfnresource.SUCCESS, response, "CustomResourcePhysicalID")
         else:
             logging.info("No matching event found")
+            override_config_recorder(enabled_accounts, sqs_url, '', 'Delete', disabled_accounts)
 
         logging.info('Execution Successful')
 
