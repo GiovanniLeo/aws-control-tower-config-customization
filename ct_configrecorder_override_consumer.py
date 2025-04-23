@@ -17,6 +17,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 #
+import uuid
 
 import boto3
 import json
@@ -61,7 +62,7 @@ def lambda_handler(event, context):
                     part = STS.get_caller_identity()['Arn'].split(":")[1]
 
                     role_arn = 'arn:' + part + ':iam::' + account_id + ':role/' + role
-                    ses_name = str(account_id + '-' + role)
+                    ses_name = str(uuid.uuid4())
                     response = STS.assume_role(RoleArn=role_arn, RoleSessionName=ses_name)
                     sts_session = boto3.Session(
                         aws_access_key_id=response['Credentials']['AccessKeyId'],
