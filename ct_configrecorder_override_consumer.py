@@ -81,8 +81,15 @@ def lambda_handler(event, context):
         configservice = sts_session.client('config', region_name=aws_region)
 
         # Describe configuration recorder
-        configrecorder = configservice.describe_configuration_recorders()
-        logging.info(f'Existing Configuration Recorder :', configrecorder)
+        try:
+            configrecorder = configservice.describe_configuration_recorders()
+            logging.info(f'Existing Configuration Recorder :', configrecorder)
+        except Exception as e:
+            logging.error(f'Unable to describe Config Recorder for account {account_id} caused by {e}')
+            return {
+                'statusCode': 500,
+                'body': json.dumps('Unable to describe Config Recorder')
+            }
 
         # ControlTower created configuration recorder with name "aws-controltower-BaselineConfigRecorder" and we will update just that
         try:
